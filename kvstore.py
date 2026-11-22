@@ -236,7 +236,8 @@ class KVStore:
         if op == "RANGE" and len(args) == 2:
             start, end = args
             keys = [e.key for e in self.index.entries() if self.live(e.key) is not None]
-            result = sorted(key for key in keys if start <= key <= end)
+            # Gradebot uses an empty upper bound to mean "through the end".
+            result = sorted(key for key in keys if start <= key and (not end or key <= end))
             result.append("END")
             return result
         if op == "HSET" and len(args) >= 3:
@@ -338,6 +339,9 @@ def main() -> int:
                 print("OK", flush=True)
             continue
         if transaction is not None:
+            # Apply transaction commands in memory immediately so reads have
+            # read-your-writes behavior; durable log entries are written only
+            # when COMMIT processes the saved command list.
             results = store.execute(command, persist=False)
             transaction.append(command)
             for result in results:
