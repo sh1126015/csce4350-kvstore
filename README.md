@@ -1,7 +1,7 @@
 # CSCE 4350 Project 1 — Simple Key-Value Store
 
 **Student:** Anil Shrestha  
-**EUID:** `amm0813`  
+**EUID:** `11904000`  
 **Course:** CSCE 4350.401 — Fundamentals of Database Systems
 
 This project implements a persistent command-line key-value database in Python.
